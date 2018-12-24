@@ -100,6 +100,7 @@ def buy(customerid, itemid, quantity):
     except:
         return False
 
+
 def update(new_remain, itemid):
     global cur
     print("changing remain")
@@ -109,16 +110,17 @@ def update(new_remain, itemid):
     except:
         print("update err")
 
+
 def search(minprice,maxprice,keyword):
     """首先判断各个参数是否为空，不为空加入到sql语句中"""
-    sql = 'select * from item where '
+    sql = 'select * from movie where '
     if keyword!="":
         sql+=" name like '%"+keyword+"%' and"
     if minprice!="":
         sql+=" price >= "+ minprice +" and"
     if maxprice!="":
         sql+=" price <= "+ maxprice +" and"
-    sql+=" remain > -1;"
+    sql+=" remain > -1"
     try:
 
         cur.execute(sql)
@@ -132,20 +134,32 @@ def search(minprice,maxprice,keyword):
 
     except:
         return False
-#registry("test_user", "pass")
-'''
-registry("test_user3", "pass")
 
-login("test_user", "password")
-login("test_user", "pass")
-login("test", "pass")
 
-getinfo()
-orderinfo("test_user")
+def getreview(itemid):
+    global cur
+    try:
+        sql = 'select * from reviews where id="%s"' % itemid
+        cur.execute(sql)
+        results = cur.fetchall()
+        return results
+        # [movie_id, timestamp, text]
+    except :
+        return None
 
-buy("test_user", "11181", 1)
-'''
-'''
-cur.close()
-conn.close()
-'''
+
+def createreview(itemid, text):
+    global cur
+    try:
+        # timestamp
+        timestamp = str(int(time.time()))
+        # create order
+        sql = 'insert into table reviews values("%s", "%s", "%s")' % (itemid, timestamp, text)
+        cur.execute(sql)
+
+        return True
+    except:
+        return False
+
+
+print(search("","",'Star'))
